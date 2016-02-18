@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<Result>
+	<stateResult state="-3" />
+	<userInfo />
+	<ticketInfo />
+</Result>
+

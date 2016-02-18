@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head> 
+	
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+	<meta name="viewport" content="width=device-width,initial-scale=1" >
+	
+	   <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+   <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+   <script src="http://libs.baidu.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+	<title> 文档识别测试 </title>
+	
+	<!-- 
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">  <!-- 加入BootStrap -->
+	-->
+	
+	<!-- <link rel="stylesheet" type="text/css " href="lele.css ">  -->
+	    <!-- 插入jquery -->
+    <script src="{{url_for('static', filename='jquery.js')}}"></script>
+    <script type=text/javascript>
+        var $SCRIPT_ROOT = {{request.script_root|tojson|safe}};
+    </script>
+    <!--Ajax-->
+    <script type=text/javascript>
+        $(function() {
+            var page_num=1;
+            function Pre_submit(e) {  //提交表单前一个
+            page_num = page_num-1;
+
+            $.post($SCRIPT_ROOT + '/add', {//请求页面
+                //a: $('input[name="a"]').val(),//数据结构
+                b: $('input[name="b"]').val(),
+                a:page_num,
+                now: new Date().getTime()
+            },
+
+            function(data) {//回调函数
+                $("#pic_2").attr("src","static/Uploads/abc12.jpg");
+                $('#result').text(data.result);
+            },
+            "json"
+            );
+        };// end 提交表单功能
+
+        function Next_submit(e) {  //提交表单
+            page_num = page_num+1;
+
+            $.post($SCRIPT_ROOT + '/add', {//请求页面
+                //a: $('input[name="a"]').val(),//数据结构
+                b: $('input[name="b"]').val(),
+                a:page_num,
+                now: new Date().getTime()
+            },
+
+            function(data2) {//回调函数
+                $("#pic_2").attr("src","static/Uploads/abc12.jpg");
+                $('#result').text(data2.result);
+            },
+            "json"
+            ); 
+        };// end 提交表单功能
+        
+        // 绑定click事件
+        //$('#calculate').bind('click', submit_form);
+        $('#PrePage').bind('click', Pre_submit);
+        $('#NextPage').bind('click', Next_submit);
+    });
+    </script>
+    <!--Ajax -->
+</head>
+<STYLE type="text/css">
+*{
+	margin: 0;
+	padding:0;
+	font-size: 18px;
+}
+.main{	
+	width: 1200px;
+	margin: 0 auto;
+}
+.pic_big{
+   height: 200px;
+   width: 200px;
+   border: 2px solid black;
+   margin: 0 auto;
+   margin-top: 30px;
+}
+.upload{
+	margin-left:30%;
+	margin-top:30px;   
+}
+.search {
+ margin-top:30px;
+}
+
+.pic_list{
+	margin-top: 30px;
+}
+.pic{
+
+   height: 170px;
+   max-width:170px;
+   border: 0px solid black;
+   float: left;
+   margin-left: 10px;
+   margin-top:5px;
+}
+
+</STYLE>
+	<script>
+					    function upload() {
+							
+							var	fileInput = document.getElementById('test-file'); // 上传按钮
+						// 监听change事件:
+						fileInput.addEventListener('change', function() {
+							var 						
+							info = document.getElementById('test-file-info'), //文件信息
+							preview = document.getElementById('test-image-preview'); //文本框
+
+
+							// 清除背景图片:
+							preview.style.backgroundImage = '';
+							// 检查文件是否选择:
+							if (!fileInput.value) {
+								info.innerHTML = '选择文件';
+								return;
+							}
+							// 获取File引用:
+							var file = fileInput.files[0];
+							// 获取File信息:
+							//info.innerHTML = '文件: ' + file.name + '<br>' +
+							//	'大小: ' + file.size + '<br>' +
+							//	'修改: ' + file.lastModifiedDate;
+							info.innerHTML = '文件: ' + file.name+"  ";
+							if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/gif') {
+								alert('不是有效的图片文件!');
+								return;
+							}
+							// 读取文件:
+							var reader = new FileReader();
+							reader.onload = function(e) {
+								var
+									data = e.target.result; // 'data:image/jpeg;base64,/9j/4AAQSk...(base64编码)...'            
+								//preview.style.backgroundImage = 'url(' + data + ')';
+								preview.src = 'login.jpg';
+							};
+							// 以DataURL的形式读取文件:
+							reader.readAsDataURL(file);
+						});
+					} 		
+		upload();
+	</script>
+<body>
+		<!-- 顶部导航 -->
+	<form action="upload" method="get" name="pre_process">
+	<fieldset>
+	<legend>初始化设置</legend>
+	 <label>银行：</label>
+	  <select name="bank" size="1">
+		  <option>中国银行</option>
+		  <option>工商银行</option>
+		  <option>农业银行</option>
+		  <option>浙商银行</option>
+	    </select>
+		<br />
+	 	 <label>识别类型：</label>
+		<select name="pic" size="1">
+		  <option>图片</option>
+		  <option>扫描文档</option>
+	    </select>
+		<br />
+	 <label>账号：</label>
+    <input name="count_id" type="text" size="10" maxlength="30" />
+	<br />
+	 <label>ID：</label>
+    <input name="bank_id" type="text" size="10" maxlength="30" />
+	<br />
+	  <label>是否记忆账号：</label>
+    <input name="remember" type="radio" value="ok" />
+	  <br />
+	  <input name="sub_ok" type="submit" value="提交" />
+	  <input name="sub_error" type="reset" id="sub_error" value="重置" />
+	  </fieldset>
+	</form>
+		<!-- 顶部导航结束  -->
+	<div class="main">
+	
+  		<div style="border:1px solid black"> <!--  大盒子 -->
+		  <div style="align:left;margin-top:95px;">  <!--上边距  -->
+		  
+		     <img src="{{img}}" width="384" height="380"  id="test-image-preview" style="border: 0px solid rgb(204, 204, 204); width:350px;background-size: contain; background-position:50% 50%; background-repeat: no-repeat;margin-left:1%;" />		  </div>
+		  <!--上边距  -->
+  		</div><!--  大盒子 -->
+		    		<p id="test-file-info" style="margin-left:5% ">点击进来啊！</p> <br>
+		      
+				<form  class="form-horizontal" role="form" action="upload" method="post" id="submit_id" name="myForm" enctype="multipart/form-data">
+				<input style="margin-left:5%;display:inline;" type="file" class="upload" id="test-file"  name="file" />
+				<!-- <input type="submit"  value="搜索" />  -->		
+<input  style=“display:inline;” name="submit" type="submit" class="search"  value="识别" />
+		
+							
+				</form>
+		  <br />
+		  <div style="border:1px solid black"> <!--  大盒子 -->
+		  <div style="align:left;">  <!--上边距  -->
+		     <img src="{{img2}}"  height="380"  id="test-image-preview2" style="border: 0px solid rgb(204, 204, 204); width:350px;background-size: contain; background-position:50% 50%; background-repeat: no-repeat;margin-left:1%;" />	      </div>
+		  <!--上边距  -->
+  		</div><!--  大盒子 -->
+		 <!--	
+		<div  id="test-image-preview" style="border: 0px solid rgb(204, 204, 204); height:200px;width:150px;background-size: contain; background-position:50% 50%; background-repeat: no-repeat;margin-left:35%;margin-top:5px;" > </div>	
+		-->	
+
+				
+			
+	<script>
+					    function upload() {
+							
+							var	fileInput = document.getElementById('test-file'); // 上传按钮
+						// 监听change事件:
+						fileInput.addEventListener('change', function() {
+							var 						
+							info = document.getElementById('test-file-info'), //文件信息
+							preview = document.getElementById('test-image-preview'); //文本框
+
+
+							// 清除背景图片:
+							preview.style.backgroundImage = '';
+							// 检查文件是否选择:
+							if (!fileInput.value) {
+								info.innerHTML = '选择文件';
+								return;
+							}
+							// 获取File引用:
+							var file = fileInput.files[0];
+							// 获取File信息:
+							//info.innerHTML = '文件: ' + file.name + '<br>' +
+							//	'大小: ' + file.size + '<br>' +
+							//	'修改: ' + file.lastModifiedDate;
+							info.innerHTML = '文件: ' + file.name+"  ";
+							if (file.type !== 'image/jpg' && file.type !== 'image/png' && file.type !== 'image/jpeg' && file.type !== 'image/gif') {
+								alert('不是有效的图片文件!');
+								return;
+							}
+							// 读取文件:
+							var reader = new FileReader();
+							reader.onload = function(e) {
+								var
+									data = e.target.result; // 'data:image/jpeg;base64,/9j/4AAQSk...(base64编码)...'            
+								//preview.style.backgroundImage = 'url(' + data + ')';
+								preview.src = data;
+							};
+							// 以DataURL的形式读取文件:
+							reader.readAsDataURL(file);
+						});
+					} 		
+		upload();
+	</script>
+	<!-- 
+		<script src="js/jquery-1.11.1.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+-->
+
+	</div>
+</body>
+</html>
+
+<!--   
+<div id="test-image-preview" style="border: 1px solid rgb(204, 204, 204); width: 100%; height: 200px; background-size: contain; background-position: 50% 50%; background-repeat: no-repeat;"></div>
+
+-->
